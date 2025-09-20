@@ -1,8 +1,10 @@
 # Embdedded Clock/Timer Project:
 
-I have an old bitmap screen lying around, which I have meant to do something with for ages. I have some time between applying for jobs, so I might as well do it now! I want to implement the following functionality as an MVP, but keep the project extendable and programmable. Eventually I want more internet connected features, like a weather screen or a notification bar. Maybe I could use embedded alexa for this (but that would need a big upgrade.)
+I have an old bitmap screen lying around, which I have meant to do something with for ages. I have time between applying for jobs, so I might as well do it now! I want to implement the following functionality as an MVP but keep the project extendable and programmable. Eventually, I want more internet-connected features, like a weather screen or a notification bar. Maybe I could use embedded Alexa for this (but that would need a big upgrade).
 
 At the moment, this code is fairly abstract. I haven't firmed any components apart from the screen, and I'm still deciding between using an ESP32 or a Pi Pico for this project.
+
+You can find more documentation in the [docs](docs) folder.
 
 ## MVP functionality: 
 To display the current time and switch to a timer setting when needed, the clock will need the following features:
@@ -12,33 +14,75 @@ To display the current time and switch to a timer setting when needed, the clock
 - **Easily Readable Text:** We will have to develop a way of storing characters or sprites for text. At the moment they are just stored as arrays within the code.
 - **Intuitive UI:** The model will have to have intuitive ways of interacting with our clock, changing the alarm duration, timer time and other variables. This will be included in the physical design process.
 
-# Basic Structure:
+# Hardware Structure:
+
+At a hardware level, there are only 6 main components/subsystems:
+
+- **Battery/Power supply:** This provides power to our system. Need to work out what voltage the screen will take.
+- **Microcontroller:** this handles logic, inputs and outputs
+- **User interface for the embedded system**: Physical controls that the end user can use to interact with the device.
+- **Serial Port/Bluetooth connectivity:** We attach the screen to our computer.
+- **LCD Dotmatrix screen:** This is what will display the time, 
+- **Speaker/Buzzer:** for playing sounds.
+
+## Inputs and Outputs:
+
+Our controller has three inputs: 
+
+- **Timing Chip**: This will be a more accurate timer than the built-in ESP32 clock
+- **External Serial Input:** This will read incoming messages from a computer/another chip.
+- **User Interface:** This will be how an end user interacts with the device, it could be buttons, knobs or some other form of input, but I'm keeping it abstract for now.
+
+The system also has **three main outputs**:
+
+- **LCD dot-matrix screen**: This will be our display.
+- **Audio Out:** This could be a buzzer, a speaker or an analog VCA circuit. I havent decided yet. Probably a buzzer in the first implementation.
+- **External Serial Output**: This is how we print error messages and information to send back to the computer. It is not used by the end-user.
 
 ```mermaid
 ---
 title: Physical Components
 ---
 flowchart
-DotMatrixScreen[LCD Dotmatirx]
-MicroController
+
+MicroController[Micro Controller]
+
+subgraph External Inputs
+Timer[Timing Chip]
+UserInterface[User Interface]
+Computer["External Computer 
+Input"]
+end
+
+SerialInterface("Serial 
+Interface")
+Battery[Power]
+
+subgraph Outputs
+DotMatrixScreen[LCD Dot-matrix]
+AudioOut
+end 
+
+Timer -- controls timing of ---> MicroController
 SerialInterface <-- Serial Comms --> MicroController
-UserInterface -- commands --> MicroController
+UserInterface -- commands ---> MicroController
 MicroController -- Drives --> DotMatrixScreen
-UI -- Controls --> MicroController
 Battery -- powers --> MicroController
 Battery -- powers --> DotMatrixScreen
 Computer <-- serial comms--> SerialInterface
+MicroController -- Plays sounds through --> AudioOut
 
 ```
 
-At a hardware level, there are only 5 main components:
+# Software Design
 
-- **Battery/Power supply:** This provides power to our system. Need to work out what voltage the screen will take.
-- **microcontroller:** this handles logic, inputs and outputs
-- **User interface for the embedded system**: These are any buttons that may be used on the clock to control features.
-- **Serial Port/Bluetooth connectivity:** This is how we attach the screen to our computer.
-- **LCD Dotmatirx screen:** This is what will display the time, 
-- **Speaker/Buzzer:** for playing sounds, this will be implemented last I think!
+The software on the microcontroller is designed to be modular. Different functions are seperated out into pages, and pages are designed to interface with the rest of the software as little as possible. For example, a simple clock might have four pages:
+
+- **Alarm:** This sets and processes the alarm logic.
+- **Timer:** A timer that counts up from the start.
+- **Clock:** A standard clock screen.
+
+All these pages need to react differently to button presses, and send different info out to the screen, but we only need to send one thing out: The current display information. We only need button presses and timer information to come in.
 
 ```mermaid
 ---
@@ -65,9 +109,22 @@ timer
 timer --> ClockUpdater
 timer --> TimerUpdater
 timer --> AlarmUpdater
+
+subgraph Clock
 ClockInfo[clock Info]
+ClockUpdater
+end
+
+subgraph Timer
 TimerInfo[timer Info]
+TimerUpdater
+end
+
+subgraph Alarm
 AlarmInfo[alarm Info]
+AlarmUpdater
+end
+
 modelViewInterface["High-Level Model
 Communication"]
 
@@ -95,11 +152,3 @@ CurrentStateMachine -- commands --> TimerUpdater
 CurrentStateMachine -- commands --> AlarmUpdater
 modelViewInterface -- sends updates to --> ViewModelInterface
 ```
-
-At a software level, I have separated components by using an MVC structure. This means that separate view and control modules can be written for my dev environment (on the computer) and for the embedded environment without introducing breaking changes. This might be overkill for a personal project, but it could be useful if I want to use a different screen at some point!
-
-This structure diagram is simplifed and doesnt include any ISRs, but you can just think of the timer updater block as including any timekeeping we need to do.
-
-## Next Steps:
-Decide on which board to use - either Pi Pico or ESP32.
-Find the 

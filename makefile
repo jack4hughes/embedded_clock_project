@@ -29,6 +29,7 @@ $(TARGET): $(OBJECTS) | $(BUILD_DIR)
 $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+# Clean: removes all build folders when make clean is called.
 clean:
 	rm -rf $(BUILD_DIR)
 
