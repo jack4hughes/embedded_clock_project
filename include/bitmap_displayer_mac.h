@@ -19,17 +19,17 @@
 #define BLOCK_LIGHT   "░"    // U+2591
 #define BLOCK_EMPTY   " "
 
-char *map_pixel_value_to_char(uint8_t bitmap_entry);
+char *map_pixel_value_to_char(uint16_t bitmap_entry);
 /* Provides a mapping that matches pixel values to characters.
  *
- * TODO: Change this to map any uint8_t value to a character.
+ * TODO: Change this to map any uint16_t value to a character.
  */
 
 void clear_screen(); //Clears the terminal output (SLOW)
 
 void cursor_home(); //return the cursor to the home position.
 
-int print_bitmap(uint8_t *bitmap_loc);
+int print_bitmap(uint16_t *bitmap_loc);
 /* Prints the bitmap out to the terminal. At the moment, this has no flushing
  * mechanism installed, so the bitmap will just be written below everything
  * else.  */
