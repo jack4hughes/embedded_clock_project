@@ -174,7 +174,7 @@ Bitmap get_character_bitmap(char character) {
       return colon;
       break;
     default:
-      return colon;
+      return blank;
       break;
   };
 }
@@ -236,6 +236,10 @@ void update_bitmap_with_string(
       str_ptr++;
       current_char = *str_ptr;
     }
+  }
+  else {
+    return;
+     //just early returns if the string is too long! need to change this.
   }
 }
 

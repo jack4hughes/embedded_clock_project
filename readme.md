@@ -113,16 +113,19 @@ timer --> AlarmUpdater
 subgraph Clock
 ClockInfo[clock Info]
 ClockUpdater
+ClockViewUpdater
 end
 
 subgraph Timer
 TimerInfo[timer Info]
 TimerUpdater
+TimerViewUpdater
 end
 
 subgraph Alarm
 AlarmInfo[alarm Info]
 AlarmUpdater
+AlarmViewUpdater
 end
 
 modelViewInterface["High-Level Model
@@ -132,9 +135,9 @@ ClockUpdater --> ClockInfo
 TimerUpdater --> TimerInfo
 AlarmUpdater --> AlarmInfo
 
-ClockInfo --> modelViewInterface
-TimerInfo --> modelViewInterface
-AlarmInfo --> modelViewInterface
+ClockInfo --> ClockViewUpdater --> modelViewInterface
+TimerInfo --> TimerViewUpdater --> modelViewInterface
+AlarmInfo --> AlarmViewUpdater --> modelViewInterface
 end
 
 subgraph controller
