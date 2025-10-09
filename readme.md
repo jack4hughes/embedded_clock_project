@@ -155,3 +155,26 @@ CurrentStateMachine -- commands --> TimerUpdater
 CurrentStateMachine -- commands --> AlarmUpdater
 modelViewInterface -- sends updates to --> ViewModelInterface
 ```
+
+# Pages:
+Each function of the clock is contained in a "page". This holds various callbacks that can update the logic behind each function, draw the page to the screen or accept some input. These are all designed to be high level functions.
+
+For an example, lets take a timer function. This will have a view, which prints the remaining amount of time that the timer has to run, a logic component that allows the timer to count up, and some inputs so that the user can stop and reset the timer. All of this functionality will be contained in the following three functions:
+
+- **draw_fn()**: This is responsible for displaying the timer on the screen. It will take some information about the timer, and use that to update the screen_bitmap.
+- **Input update_fn(int input)**: This function handles how each page will respond to an input. We want the user to press one button to start and stop the timer, and another to reset it, one button will trigger a 1, while another will be 2. 0 means no input.
+- **timer_update_function(time_string)** This takes in the time, then updates any variables that need updating. At the moment this is a time string, but we need to change it to a raw time at some point.22
+
+# TODOS:
+
+- [ ] Get terminal input to work to allow switching/refreshing of pages.
+- [ ] Refactor main to remove Mac/Unix-specific calls.
+- [ ] Refactor get_current_time returns a raw time that is processed within time.h.
+- [ ] Design pages for timer function.
+  - [ ] Design logic for timer.
+  - [ ] Design views for timer (probably not very different to clock.c)
+  - [ ] Design control interface for timer
+- [ ] Design pages for alarm function.
+  - [ ] Design logic for alarm.
+  - [ ] Design views for alarm (probably not very different to clock.c)
+  - [ ] Design control interface for alarm
