@@ -6,7 +6,13 @@ void clear_screen() {
   fflush(stdout);
 }
 
+void hide_cursor() {
+  printf("\033[?25l");
+}
 
+void show_cursor() {
+  
+}
 void cursor_home() {
   printf("\033[H");
   fflush(stdout);
@@ -42,6 +48,8 @@ int print_bitmap(uint16_t *bitmap_loc) {
   // Prints the current bitmap out to the screen.
   int i = 0;
   int col_number = 0;
+  hide_cursor();
+  cursor_home(); //should send the cursor home?
   
   while (i < SCREEN_HEIGHT * SCREEN_WIDTH) {
   col_number = i % SCREEN_WIDTH;
