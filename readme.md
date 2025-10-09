@@ -1,6 +1,6 @@
 # Embdedded Clock/Timer Project:
 
-I have an old bitmap screen lying around, which I have meant to do something with for ages. I have time between applying for jobs, so I might as well do it now! I want to implement the following functionality as an MVP but keep the project extendable and programmable. Eventually, I want more internet-connected features, like a weather screen or a notification bar. Maybe I could use embedded Alexa for this (but that would need a big upgrade).
+I have an old bitmap screen that I have meant to do something with for ages. I have time between applying for jobs, so I might as well do it now! I want to implement the following functionality as an MVP but keep the project extendable and programmable. Eventually, I want more internet-connected features, like a weather screen or a notification bar. Maybe I could use embedded Alexa for this (but that would need a big upgrade).
 
 At the moment, this code is fairly abstract. I haven't firmed any components apart from the screen, and I'm still deciding between using an ESP32 or a Pi Pico for this project.
 
