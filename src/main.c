@@ -26,21 +26,23 @@ int main(void) {
   init_page_state_machine();
   Page clock_page = create_clock_page();
   add_page(&clock_page);
-  add_page(&clock_page); // for testing purposes!
+  add_page(&clock_page);
   Page *page = get_next_page();
+  printf("new page created at %p", page);
   
   //set up IO
-  // init_term_io();
+  init_term_io();
   
   // Setting up the time for each loop.
   struct timespec ts, rem;
   ts.tv_sec = 0;
   ts.tv_nsec = 17 * MILLISECOND_MULTIPLIER; //60fps!
-  
+  char *scan_start[128]; // scanf biffer incase people press buttons before enter.
+  scanf("", &scan_start);
   //enter loop.
-  /* while(1) {
+  while(1) {
     char input;
-    // screen_update_loop(page);
+    screen_update_loop(page);
     int user_input_received = read(STDIN_FILENO, &input, 1);
     if (user_input_received == 1) {
       //process that input
@@ -57,5 +59,5 @@ int main(void) {
     else if (user_input_received == 0) {
       screen_update_loop(page);
     }
-   } */
+   }
 }
