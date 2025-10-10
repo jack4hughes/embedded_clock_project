@@ -6,6 +6,10 @@ At the moment, this code is fairly abstract. I haven't firmed any components apa
 
 You can find more documentation in the [docs](docs) folder.
 
+## Current Status:
+
+Currently, I don't have a way to power the screen, so the current build emulates the clock's functionality on a computer. 
+
 ## MVP functionality: 
 To display the current time and switch to a timer setting when needed, the clock will need the following features:
 
@@ -76,13 +80,15 @@ MicroController -- Plays sounds through --> AudioOut
 
 # Software Design
 
-The software on the microcontroller is designed to be modular. Different functions are seperated out into pages, and pages are designed to interface with the rest of the software as little as possible. For example, a simple clock might have four pages:
+The software on the microcontroller is designed to be modular. Different functions are separated out into modes, and pages are designed to interface with the rest of the software as little as possible. For example, a simple clock might have three modes:
 
 - **Alarm:** This sets and processes the alarm logic.
 - **Timer:** A timer that counts up from the start.
 - **Clock:** A standard clock screen.
 
-All these pages need to react differently to button presses, and send different info out to the screen, but we only need to send one thing out: The current display information. We only need button presses and timer information to come in.
+Other pages, such as Weather and Updates, can be added in the future. To allow for this, an interface for pages was designed that makes them easy to add. 
+
+All these pages need to react differently to button presses and send different information to the screen, but we only need to send one thing out: the current display information. We only need button presses and timer information to come in.
 
 ```mermaid
 ---
@@ -155,26 +161,27 @@ CurrentStateMachine -- commands --> TimerUpdater
 CurrentStateMachine -- commands --> AlarmUpdater
 modelViewInterface -- sends updates to --> ViewModelInterface
 ```
-
-# Pages:
-Each function of the clock is contained in a "page". This holds various callbacks that can update the logic behind each function, draw the page to the screen or accept some input. These are all designed to be high level functions.
-
-For an example, lets take a timer function. This will have a view, which prints the remaining amount of time that the timer has to run, a logic component that allows the timer to count up, and some inputs so that the user can stop and reset the timer. All of this functionality will be contained in the following three functions:
-
-- **draw_fn()**: This is responsible for displaying the timer on the screen. It will take some information about the timer, and use that to update the screen_bitmap.
-- **Input update_fn(int input)**: This function handles how each page will respond to an input. We want the user to press one button to start and stop the timer, and another to reset it, one button will trigger a 1, while another will be 2. 0 means no input.
-- **timer_update_function(time_string)** This takes in the time, then updates any variables that need updating. At the moment this is a time string, but we need to change it to a raw time at some point.22
-
+You can find more about software design in [software design notes](docs/software_notes.md)
 # TODOS:
 
-- [ ] Get terminal input to work to allow switching/refreshing of pages.
-- [ ] Refactor main to remove Mac/Unix-specific calls.
-- [ ] Refactor get_current_time returns a raw time that is processed within time.h.
-- [ ] Design pages for timer function.
+- [x] Get terminal input to work to allow switching/refreshing of pages.
+
+- [x] Refactor main to remove Mac/Unix-specific calls in main.
+
+- [ ] Change name of Page struct to something more descriptive (ClockMode maybe?) – also need to do this for functions.
+
+- [ ] Refactor so that get_current_time returns a raw time processed within time.h. - Need to decide when the time string will be handled at this point.
+
+- [ ] Design functions for timer function.
   - [ ] Design logic for timer.
   - [ ] Design views for timer (probably not very different to clock.c)
   - [ ] Design control interface for timer
-- [ ] Design pages for alarm function.
+
+- [ ] Design functions for alarm function.
   - [ ] Design logic for alarm.
   - [ ] Design views for alarm (probably not very different to clock.c)
   - [ ] Design control interface for alarm
+
+- [ ] Fix the display glitch that causes issues with leading zeros.
+
+  
