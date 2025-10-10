@@ -1,14 +1,10 @@
-# Embdedded Clock/Timer Project:
+# Embedded Clock/Timer Project:
 
 I have an old bitmap screen that I have meant to do something with for ages. I have time between applying for jobs, so I might as well do it now! I want to implement the following functionality as an MVP but keep the project extendable and programmable. Eventually, I want more internet-connected features, like a weather screen or a notification bar. Maybe I could use embedded Alexa for this (but that would need a big upgrade).
 
 At the moment, this code is fairly abstract. I haven't firmed any components apart from the screen, and I'm still deciding between using an ESP32 or a Pi Pico for this project.
 
 You can find more documentation in the [docs](docs) folder.
-
-## Current Status:
-
-Currently, I don't have a way to power the screen, so the current build emulates the clock's functionality on a computer. 
 
 ## MVP functionality: 
 To display the current time and switch to a timer setting when needed, the clock will need the following features:
@@ -18,8 +14,27 @@ To display the current time and switch to a timer setting when needed, the clock
 - **Easily Readable Text:** We will have to develop a way of storing characters or sprites for text. At the moment they are just stored as arrays within the code.
 - **Intuitive UI:** The model will have to have intuitive ways of interacting with our clock, changing the alarm duration, timer time and other variables. This will be included in the physical design process.
 
-# Hardware Structure:
+### Current Status:
 
+Currently, I don't have a way to power the screen, so the current build emulates the clock's functionality on a computer. 
+
+The current working software features are:
+- [x] Bitmap display using the terminal
+      
+- [x] User Input using the keyboard
+
+- [x] Timekeeping using Unix clock.\
+
+- [x] Mode creation using structs and Function Pointers.
+
+- [ ] adding different modes (Implemented but non-working – need to debug.)
+
+- [ ] Timer Mode  (not implemented)
+
+- [ ] Alarm Mode (not implemented)
+
+Hardware is not planned to be implemented until software works properly. (This will allow testing of software independent of hardware drivers.)
+# Hardware Structure:
 At a hardware level, there are only 6 main components/subsystems:
 
 - **Battery/Power supply:** This provides power to our system. Need to work out what voltage the screen will take.
@@ -162,6 +177,7 @@ CurrentStateMachine -- commands --> AlarmUpdater
 modelViewInterface -- sends updates to --> ViewModelInterface
 ```
 You can find more about software design in [software design notes](docs/software_notes.md)
+
 # TODOS:
 
 - [x] Get terminal input to work to allow switching/refreshing of pages.
@@ -170,7 +186,7 @@ You can find more about software design in [software design notes](docs/software
 
 - [ ] Change name of Page struct to something more descriptive (ClockMode maybe?) – also need to do this for functions.
 
-- [ ] Refactor so that get_current_time returns a raw time processed within time.h. - Need to decide when the time string will be handled at this point.
+- [ ] Refactor so that get_current_time returns a raw time processed within time.h. - Need to decide when the time string will be handled at this point. 
 
 - [ ] Design functions for timer function.
   - [ ] Design logic for timer.
