@@ -11,6 +11,6 @@ char * get_time_string(char *time_string_loc){
     time_info = localtime(&raw_time);
     
     // Format as "HH:MM" (24-hour format)
-    strftime(time_string_loc, 6, "%H:%M:%m", time_info);
+    strftime(time_string_loc, 9, "%H:%M:%S", time_info);
     return time_string_loc;
 };

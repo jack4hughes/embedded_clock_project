@@ -21,13 +21,13 @@
 #define BLOCK_LIGHT   "░"    // U+2591
 #define BLOCK_EMPTY   " "
 
-void cleanup_terminal();
+void cleanup_term_io();
 // cleans terminal for exit.
 
 void signal_handler(int signum);
 //Resets terminal on exit.
 
-int initialise_screen();
+int init_term_io();
 //initialises screen display.
 char *map_pixel_value_to_char(uint16_t bitmap_entry);
 /* Provides a mapping that matches pixel values to characters.
