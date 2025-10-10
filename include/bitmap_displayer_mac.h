@@ -5,20 +5,30 @@
 #ifndef BITMAP_DISPLAY_MAC_H
 #define BITMAP_DISPLAY_MAC_H
 
-#include "bitmap.h"
+#include <signal.h>
+#include <termios.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
 
-//defining how our print statement should look.
-#define FULL_SQUARE_CHAR '#'
-#define BLANK_SQUARE_CHAR ' '
+#include "bitmap.h"
 
+
+//defining how our print statement should look.
 #define BLOCK_FULL    "█"    // U+2588
 #define BLOCK_DARK    "▓"    // U+2593
 #define BLOCK_MEDIUM  "▒"    // U+2592
 #define BLOCK_LIGHT   "░"    // U+2591
 #define BLOCK_EMPTY   " "
 
+void cleanup_terminal();
+// cleans terminal for exit.
+
+void signal_handler(int signum);
+//Resets terminal on exit.
+
+int initialise_screen();
+//initialises screen display.
 char *map_pixel_value_to_char(uint16_t bitmap_entry);
 /* Provides a mapping that matches pixel values to characters.
  *

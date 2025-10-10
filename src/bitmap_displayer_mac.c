@@ -1,5 +1,28 @@
 #include "bitmap_displayer_mac.h"
-#include "bitmap.h"
+
+static struct termios standard_termios;
+static int terminal_modified = 0;
+
+void cleanup_terminal() {
+  printf("\033[?25h");  // Show cursor
+  printf("\033[0m");    // Reset colors/formatting
+  fflush(stdout);
+}
+
+void signal_handler(int signum) {
+  cleanup_terminal();
+  exit(signum);
+}
+
+int initialise_screen() {
+  init_fonts(); //initialises the fonts in memory. 
+  init_screen_bitmap(); //initialises the screen bitmap within memory.
+  clear_screen();
+  signal(SIGINT, signal_handler);
+  // Also register cleanup for normal exit
+  atexit(cleanup_terminal);
+  return 0;
+}
 
 void clear_screen() {
   printf("\033[2J\033[H");
