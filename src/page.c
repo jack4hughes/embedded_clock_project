@@ -25,8 +25,19 @@ Page *get_next_page() {
     
     Page *page_loc = active_page_selector.pages[index];
     active_page_selector.active_page = page_loc;
-    printf("returning next page!, page loc: %x", (int) page_loc);
-    return page_loc;
+    printf("returning next page!, page loc: %x\n", (int) page_loc);
+    if (page_loc != 0) {
+      return page_loc;
+    }
+    else {
+      printf("PAGE STATE MACHINE ERROR: Page not initialised! \n");
+      printf("returning to first page.");
+      active_page_selector.active_index = 0;
+      active_page_selector.active_page = active_page_selector.pages[0]; 
+      Page *page_loc = get_active_page_loc();
+      printf("returning first page!, page loc: %x\n", (int) page_loc);
+      return page_loc;
+    }
   }
   
   // Case where we are at the last active page. 

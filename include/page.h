@@ -28,5 +28,6 @@ Page *get_next_page();
 
 int add_page(Page *page_loc);
 //Allows a new page to be added to the PageStateMachine, and returns the index.
+
 #endif
 
