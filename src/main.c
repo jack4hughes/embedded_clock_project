@@ -9,26 +9,62 @@
 #include "time_getter_mac.h"
 #include "page.h"
 #include "clock.h"
-
+#include "test_page.h"
 #define MILLISECOND_MULTIPLIER 1000000
 
 char time_string[9] = {0}; //defines the main time string.
 
-int screen_update_loop(Page *current_page) {
+int screen_update_loop(ClockMode *current_page) {
   get_time_string(time_string);
-  current_page->timer_update_fn(time_string);
-  current_page->draw_fn();
+  int timer_update_status = current_page->timer_update_fn(time_string); //should return a 1 if error occurs.
+  int draw_status = current_page->draw_fn(); //should return a 2 if error occurs.
   print_bitmap(screen_bitmap.bitmap_loc);
   return 0;
 }
 
+int input_handler(char input, ClockMode **page) {
+  //needs to be moved to bitmap_displayer_mac at some point!
+  switch (input) {
+    case ' ': {
+      // need to move this function out to bitmap.c
+      int clear_overlay[SCREEN_WIDTH][SCREEN_HEIGHT]  = {0}; //gets the next page.
+      Bitmap clear_overlay_bitmap = {
+        SCREEN_WIDTH,
+        SCREEN_HEIGHT,
+        clear_overlay
+      };
+
+      overlay_bitmaps(&screen_bitmap, clear_overlay_bitmap, 0, 0);
+      *page = get_next_page();
+      printf("Selected next page!: page loc: %p\n", (void *) page);
+    }
+    break;
+    case 'q':                    //quits
+    break;
+
+    default:
+      return 0;
+    break;
+  }
+}
+
+
 int main(void) {
   init_page_state_machine();
-  Page clock_page = create_clock_page();
-  add_page(&clock_page);
-  add_page(&clock_page);
-  Page *page = get_next_page();
-  printf("new page created at %p", page);
+
+  ClockMode clock_page = create_clock_page();
+  ClockMode test_page = create_test_page();
+
+  int add_page_1 = add_page(&clock_page);
+  int add_page_2 = add_page(&test_page);
+  ClockMode *page = get_next_page();
+
+  printf("PAGE LOC: %p", (void *) page);
+
+  for (int i = 0; i < 16; i++) {
+    void *current_page = get_next_page();
+    printf("Current page loc: %p\n", current_page);
+  }
   
   //set up IO
   init_term_io();
@@ -37,27 +73,16 @@ int main(void) {
   struct timespec ts, rem;
   ts.tv_sec = 0;
   ts.tv_nsec = 17 * MILLISECOND_MULTIPLIER; //60fps!
-  char *scan_start[128]; // scanf biffer incase people press buttons before enter.
-  scanf("", &scan_start);
-  //enter loop.
+  
   while(1) {
     char input;
-    screen_update_loop(page);
-    int user_input_received = read(STDIN_FILENO, &input, 1);
+    int user_input_received = read(STDIN_FILENO, &input, 1); //this is currently blocking for 0.1 seconds each time. Need to find a way to improve this?
     if (user_input_received == 1) {
-      //process that input
-      if (input == ' ') {
-        page = get_next_page();
-        screen_update_loop(page);
-      }
-      else {
-        printf("recieved input: \'%c\'");
-      }
-
+      input_handler(input, &page);
+    }
       //display screen!
+    if (user_input_received == 0) {
+      int screen_update_status = screen_update_loop(page);
+      } 
     }
-    else if (user_input_received == 0) {
-      screen_update_loop(page);
-    }
-   }
-}
+  }

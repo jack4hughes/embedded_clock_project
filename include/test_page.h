@@ -1,5 +1,5 @@
-#ifndef CLOCK_PAGE_H
-#define CLOCK_PAGE_H
+#ifndef TEST_PAGE_H
+#define TEST_PAGE_H
 
 //GLOBAL INPORTS:
 #include <string.h>
@@ -10,15 +10,15 @@
 #include "bitmap.h"
 #include "time_getter_mac.h"
 
-int clock_timer_update(char *time_string);
+int test_timer_update(char *time_string);
 //Updates the model of the clock every time a timer function is called (Just using a while loop to simulate this for now.)
 
-int draw_clock();
+int draw_test();
 // Updates the bitmap with the current clock information. 
 
-void clock_input_update_function();
+void test_input_update_function();
 // Updates the clock based off inputs. Should do nothing atm.
 
-ClockMode create_clock_page();
+ClockMode create_test_page();
 
 #endif

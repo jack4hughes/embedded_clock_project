@@ -1,12 +1,12 @@
 #include "page.h"
 
-static PageStateMachine active_page_selector = {0};
+static ClockModeStateMachine active_page_selector = {0};
 
-Page *get_active_page_loc() {
+ClockMode *get_active_page_loc() {
   return active_page_selector.active_page;
 }
 
-Page *get_next_page() {
+ClockMode *get_next_page() {
     //TODO: Check This for rewrites.
   if (active_page_selector.number_of_pages == 0) {
     printf("No pages have been created yet! \n");
@@ -19,23 +19,22 @@ Page *get_next_page() {
   if (
     active_page_selector.active_index < active_page_selector.number_of_pages
   ) {
-    active_page_selector.active_index++;
     int index = active_page_selector.active_index; //just for readability
     active_page_selector.active_page = active_page_selector.pages[index];
     
-    Page *page_loc = active_page_selector.pages[index];
+    ClockMode *page_loc = active_page_selector.pages[index];
     active_page_selector.active_page = page_loc;
-    printf("returning next page!, page loc: %x\n", (int) page_loc);
+    printf("returning next page!, page loc in page array: %p\n", (void *) page_loc);
     if (page_loc != 0) {
       return page_loc;
     }
     else {
-      printf("PAGE STATE MACHINE ERROR: Page not initialised! \n");
+      printf("PAGE STATE MACHINE ERROR: ClockMode not initialised! \n");
       printf("returning to first page.");
       active_page_selector.active_index = 0;
       active_page_selector.active_page = active_page_selector.pages[0]; 
-      Page *page_loc = get_active_page_loc();
-      printf("returning first page!, page loc: %x\n", (int) page_loc);
+      ClockMode *page_loc = get_active_page_loc(); //hello?
+      printf("returning first page!, page loc: %p\n", (void *) page_loc);
       return page_loc;
     }
   }
@@ -43,24 +42,40 @@ Page *get_next_page() {
   // Case where we are at the last active page. 
   else {
     active_page_selector.active_index = 0;
-    active_page_selector.active_page = active_page_selector.pages[0]; 
-    Page *page_loc = get_active_page_loc();
-    printf("returning first page!, page loc: %x\n", (int) page_loc);
+    active_page_selector.active_page = active_page_selector.pages[0];
+    ClockMode *page_loc = get_active_page_loc();
+    printf("returning first page!, page loc: %p\n", (void *) page_loc);
     return page_loc;
   }
 }
 
 int init_page_state_machine() {
   active_page_selector.active_index = MAX_NUMBER_OF_PAGES + 1; //makes sure that the 0th loc is the next one returned when get_next_page is called.
+  return 0; //indicate that page state machine has been set up cprrectly.  
 }
 
-int add_page(Page *page_loc) {
-  printf("current active pages: %x\n, page to add: %x\n", (int) active_page_selector.number_of_pages, page_loc);
-  Page *page_array_loc = &active_page_selector.pages;
-  Page *new_page_loc = page_array_loc + active_page_selector.number_of_pages; //gets the postiion of the last page.
-  printf("page array start: %x, writing to: %x\n", (int) page_array_loc, new_page_loc);
-  active_page_selector.pages[active_page_selector.number_of_pages] = page_loc; 
+int add_page(ClockMode *page_loc) {
+  printf(
+    "current active pages: %x, page to add: %p\n", 
+    active_page_selector.number_of_pages,  
+    (void *) page_loc
+  );
 
-  active_page_selector.number_of_pages++;
+  ClockMode *page_array_loc = &active_page_selector.pages;
+  ClockMode *new_page_loc = page_array_loc + active_page_selector.number_of_pages; //gets the postiion of the last page.
+  
+  active_page_selector.pages[active_page_selector.number_of_pages] = page_loc;
+  
+  if (active_page_selector.pages[active_page_selector.number_of_pages] == NULL) {
+    printf("ERROR: Page not intialised properly! Null pointer exception.\n");
+    printf("\tInitial pointer location:  %p\n\tArray pointer location:    %p\n\tnew_page_pointer_location: %p\n",
+           (void *) page_array_loc,
+           (void *) new_page_loc,
+           (void *) &active_page_selector.pages[active_page_selector.number_of_pages]
+           );
+    return -1; //Throw an error if the next page hasnt been added correctly.
+  }
+
+  active_page_selector.number_of_pages++; //if this hasnt failed, 
   return 0;
 }
