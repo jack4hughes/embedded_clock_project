@@ -23,7 +23,7 @@ The current working software features are:
 - [x] User Input using the keyboard
 - [x] Timekeeping using Unix clock.\
 - [x] Mode creation using structs and Function Pointers.
-- [ ] Adding different modes (Implemented but non-working – need to debug.)
+- [x] Adding different modes. 
 - [ ] Timer Mode  (not implemented)
 - [ ] Alarm Mode (not implemented)
 
@@ -178,9 +178,13 @@ You can find more about software design in [software design notes](docs/software
 
 - [x] Refactor main to remove Mac/Unix-specific calls in main.
 
-- [ ] Change name of Page struct to something more descriptive (ClockMode maybe?) – also need to do this for functions.
+- [x] Change name of Page struct to something more descriptive (ClockMode maybe?) – also need to do this for functions.
 
 - [ ] Refactor so that get_current_time returns a raw time processed within time.h. - Need to decide when the time string will be handled at this point. 
+
+- [ ] Refactor to create flush_screen() function instead of doing this in main.
+
+- [ ] Rename page files to clock_mode files.
 
 - [ ] Design functions for timer function.
   - [ ] Design logic for timer.
@@ -192,6 +196,6 @@ You can find more about software design in [software design notes](docs/software
   - [ ] Design views for alarm (probably not very different to clock.c)
   - [ ] Design control interface for alarm
 
-- [ ] Fix the display glitch that causes issues with leading zeros.
+- [ ] Fix the display glitch that causes issues with leading zeros (Think this might be fixed? worked with test mode – need to test before 10AM to make sure.)
 
   
