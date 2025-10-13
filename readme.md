@@ -16,21 +16,15 @@ To display the current time and switch to a timer setting when needed, the clock
 
 ### Current Status:
 
-Currently, I don't have a way to power the screen, so the current build emulates the clock's functionality on a computer. 
+I don't have a way to power the screen right now, so the current build emulates the clock's functionality on a computer. 
 
 The current working software features are:
-- [x] Bitmap display using the terminal
-      
+- [x] Bitmap display using the terminal (Squashed horizontally.)
 - [x] User Input using the keyboard
-
 - [x] Timekeeping using Unix clock.\
-
 - [x] Mode creation using structs and Function Pointers.
-
-- [ ] adding different modes (Implemented but non-working – need to debug.)
-
+- [ ] Adding different modes (Implemented but non-working – need to debug.)
 - [ ] Timer Mode  (not implemented)
-
 - [ ] Alarm Mode (not implemented)
 
 Hardware is not planned to be implemented until software works properly. (This will allow testing of software independent of hardware drivers.)
