@@ -10,12 +10,12 @@ int draw_clock() {
   update_bitmap_with_string(&screen_bitmap, time_string_loc, 0, 0);
 }
 
-void adjust_clock(int input) {
-  return; //do nothing for now.
+int adjust_clock(char input) {
+  return 0; //do nothing for now.
 }
 
-void init_clock(int input) {
-  return;
+int init_clock() {
+  return 0;
 }
 
 ClockMode create_clock_page() {

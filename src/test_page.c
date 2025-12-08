@@ -1,7 +1,13 @@
 #include "test_page.h"
 
 int test_timer_update(char *time_string){
+  //this is a static page!
  return 0; 
+}
+
+int test_input_update(char input) {
+  // This module doesnt have interactions! 
+  return 0;
 }
 //Updates the model of the clock every time a timer function is called (Just using a while loop to simulate this for now.)
 
@@ -25,7 +31,7 @@ int clock_input_update_function() {
 ClockMode create_test_page() {
   ClockMode test_page = {
     .timer_update_fn = test_timer_update,
-    .input_update_fn = test_timer_update,
+    .input_update_fn = test_input_update,
     .draw_fn = draw_test,
     .init_fn = test_timer_update,
     .page_data = NULL,
