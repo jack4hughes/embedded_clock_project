@@ -10,6 +10,8 @@
 #include "page.h"
 #include "clock.h"
 #include "test_page.h"
+#include "countdown.h"
+
 #define MILLISECOND_MULTIPLIER 1000000
 
 char time_string[9] = {0}; //defines the main time string.
@@ -41,7 +43,16 @@ int input_handler(char input, ClockMode **page) {
     break;
     case 'q':                    //quits
     break;
+    
+    case 'a':
+      break; //This will be our first button.
 
+    case 's':
+      break;
+
+    case 'd':
+      break;
+       
     default:
       return 0;
     break;
@@ -54,9 +65,13 @@ int main(void) {
 
   ClockMode clock_page = create_clock_page();
   ClockMode test_page = create_test_page();
+  ClockMode countdown_page = create_countdown_page();
 
-  int add_page_1 = add_page(&clock_page);
-  int add_page_2 = add_page(&test_page);
+
+  int add_clock_page = add_page(&clock_page);
+  int add_test_page = add_page(&test_page);
+  int add_countdown_page = add_page(&countdown_page);
+
   ClockMode *page = get_next_page();
 
   printf("PAGE LOC: %p", (void *) page);
