@@ -20,6 +20,7 @@ ClockMode *get_next_page() {
     active_page_selector.active_index < active_page_selector.number_of_pages
   ) {
     int index = active_page_selector.active_index; //just for readability
+    printf("Current page index: %d", index);
     active_page_selector.active_page = active_page_selector.pages[index];
     
     ClockMode *page_loc = active_page_selector.pages[index];
@@ -50,7 +51,7 @@ ClockMode *get_next_page() {
 }
 
 int init_page_state_machine() {
-  active_page_selector.active_index = MAX_NUMBER_OF_PAGES + 1; //makes sure that the 0th loc is the next one returned when get_next_page is called.
+  active_page_selector.active_index = 0xFF; //makes sure that the 0th loc is the next one returned when get_next_page is called.
   return 0; //indicate that page state machine has been set up cprrectly.  
 }
 

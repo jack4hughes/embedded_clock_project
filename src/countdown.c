@@ -8,6 +8,7 @@ typedef enum CountdownState {
   COUNTDOWN_INACTIVE,
   COUNTDOWN_ACTIVE,
   COUNTDOWN_PAUSED,
+  COUNTDOWN_EDIT,
   COUNTDOWN_DONE,
 } CountdownState;
 
@@ -33,36 +34,47 @@ int countdown_timer_update(char *time_string) {
    * handle drawing directly, instead it should upodate the time remaining string.
    *
    * INPUTS: raw time, time remaining string position.*/
-  switch(countdown_state) {
-    case COUNTDOWN_INACTIVE:
-      return 0; //do nothing.
+  time_t time_remaining = 0;
 
-    case COUNTDOWN_ACTIVE:
+  switch(countdown_state) {
+    case COUNTDOWN_INACTIVE: {
+      time_remaining = 0;
+      break;
+    }
+
+    case COUNTDOWN_ACTIVE: {
       time_t raw_time = time(NULL);
       // Compare raw time to countdown_end_time.
       // update time remaining.
       time_t time_remaining = countdown_end_time - raw_time;
-      
-      //Change state if countdown is done.
+           //Change state if countdown is done.
       if (time_remaining <= 0) {
         countdown_state = COUNTDOWN_DONE;
         time_remaining = 0;
-        get_countdown_string(time_remaining, time_string);
       }
+      break;
+    }
 
-      return 0;
-
-
-    case COUNTDOWN_PAUSED:
+    case COUNTDOWN_PAUSED: {
       // Do nothing.
       return 0;
+      break;
+    }
 
-    case COUNTDOWN_DONE:
+    case COUNTDOWN_EDIT: {
+      return 0;
+      break;
+    }
+
+    case COUNTDOWN_DONE: {
       // wait for user input cancelling timer.
       // Display 00:00.
       // Make a noise.
       return 0;
+      break;
+    }
   }
+  get_countdown_string(time_remaining, remaining_time_string);
   return 0; 
 }
 
@@ -103,12 +115,15 @@ time_t get_countdown_end_time(time_t raw_time, time_t countdown_length) {
   return end_time;
 }
 
-char *get_countdown_string(time_t time_remaining, char *time_string_loc){
-    struct tm *time_info;
-    time_info = localtime(&time_remaining);
-    strftime(time_string_loc, 9, "%H:%M:%S", time_info); //This should give us the remaining time! 
-    return 0;
-};
+char *get_countdown_string(time_t time_remaining, char *time_string_loc) {
+    int hours = time_remaining / 3600;
+    int minutes = (time_remaining % 3600) / 60;
+    int seconds = time_remaining % 60;
+    
+    snprintf(time_string_loc, 9, "%02d:%02d:%02d", hours, minutes, seconds);
+    return time_string_loc; 
+}
+
 
 int reset_countdown(time_t raw_time) {
   //resets the coujntdown.

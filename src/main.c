@@ -14,6 +14,8 @@
 
 #define MILLISECOND_MULTIPLIER 1000000
 
+
+
 char time_string[9] = {0}; //defines the main time string.
 
 int screen_update_loop(ClockMode *current_page) {
@@ -37,12 +39,13 @@ int input_handler(char input, ClockMode **page) {
       };
 
       overlay_bitmaps(&screen_bitmap, clear_overlay_bitmap, 0, 0);
-      *page = get_next_page();
+      *page = get_next_page(); //Changes page reference pointer in main logic flow.
       printf("Selected next page!: page loc: %p\n", (void *) page);
     }
     break;
-    case 'q':                    //quits
-    break;
+    case 'q':
+      **page;
+      break;//quit
     
     case 'a':
       break; //This will be our first button.
@@ -67,7 +70,6 @@ int main(void) {
   ClockMode test_page = create_test_page();
   ClockMode countdown_page = create_countdown_page();
 
-
   int add_clock_page = add_page(&clock_page);
   int add_test_page = add_page(&test_page);
   int add_countdown_page = add_page(&countdown_page);
@@ -76,11 +78,6 @@ int main(void) {
 
   printf("PAGE LOC: %p", (void *) page);
 
-  for (int i = 0; i < 16; i++) {
-    void *current_page = get_next_page();
-    printf("Current page loc: %p\n", current_page);
-  }
-  
   //set up IO
   init_term_io();
   

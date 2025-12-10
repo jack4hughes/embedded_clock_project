@@ -5,6 +5,11 @@
 #include "stdio.h"
 
 #define MAX_NUMBER_OF_PAGES 16
+typedef enum ClockModeInput {
+  SWITCH_STATE,      // Switches state.
+  BUTTON,            // Standard button.
+  EDIT,              // Edit button.
+} ClockModeInput;
 
 typedef struct ClockMode {
   int (*timer_update_fn)(char *time_string); // Time string created by OS, so we need to pass this as a function. 
