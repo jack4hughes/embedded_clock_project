@@ -24,8 +24,8 @@ The current working software features are:
 - [x] Timekeeping using Unix clock.\
 - [x] Mode creation using structs and Function Pointers.
 - [x] Adding different modes. 
-- [ ] Timer Mode  (not implemented)
-- [ ] Alarm Mode (not implemented)
+- [ ] Timer Mode  (not fully implemented.)
+- [ ] Alarm Mode (not implemented at all! )
 
 Hardware is not planned to be implemented until software works properly. (This will allow testing of software independent of hardware drivers.)
 # Hardware Structure:
@@ -186,9 +186,9 @@ You can find more about software design in [software design notes](docs/software
 
 - [ ] Rename page files to clock_mode files.
 
-- [ ] Design functions for timer function.
+- [x] Design functions for timer function.
   - [ ] Design logic for timer.
-  - [ ] Design views for timer (probably not very different to clock.c)
+  - [x] Design views for timer (probably not very different to clock.c)
   - [ ] Design control interface for timer
 
 - [ ] Design functions for alarm function.
