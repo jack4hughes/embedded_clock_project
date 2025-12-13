@@ -45,15 +45,25 @@ int input_handler(char input, ClockMode **page) {
       **page;
       exit(0);
       break;//quit
-    
+   
+    case 'w':
+      (*page)->input_update_fn(UP_BUTTON);
+      printf("pressed up button!\n");
+      return 0;
     case 'a':
-      break; //This will be our first button.
+      (*page)->input_update_fn(EDIT_BUTTON);
+      printf("pressed edit button!\n");
+      return 0; //This will be our first button.
 
     case 's':
-      break;
+      (*page)->input_update_fn(DOWN_BUTTON);
+      printf("pressed down button!\n");
+      return 0;
 
     case 'd':
-      break;
+      (*page)->input_update_fn(MODE_BUTTON);
+      printf("pressed mode button!\n");
+      return 0;
        
     default:
       return 0;

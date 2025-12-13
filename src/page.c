@@ -80,3 +80,20 @@ int add_page(ClockMode *page_loc) {
   active_page_selector.number_of_pages++; //if this hasnt failed, 
   return 0;
 }
+
+
+EditTimeState get_next_time_edit_state(EditTimeState current_state) {
+  //state machine for EditTimeState.
+  switch (current_state) {
+    case EDIT_HOURS:
+      return EDIT_MINS;
+    case EDIT_MINS:
+      return EDIT_SECS;
+    case EDIT_SECS:
+      return EDIT_INACTIVE;
+    default:
+      return EDIT_INACTIVE;
+    }
+
+}
+

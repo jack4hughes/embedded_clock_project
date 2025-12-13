@@ -11,9 +11,29 @@ typedef enum ClockModeInput {
   EDIT,              // Edit button.
 } ClockModeInput;
 
+
+//Enums: This is where all the enums for page edit functions are stored.
+//
+//
+typedef enum EditTimeState {\
+  EDIT_HOURS,
+  EDIT_MINS,
+  EDIT_SECS,
+  EDIT_INACTIVE
+} EditTimeState;
+
+typedef enum InputButtonTypes {
+  MODE_BUTTON,
+  EDIT_BUTTON,
+  SNOOZE_BUTTON,
+  UP_BUTTON,
+  DOWN_BUTTON,
+} InputButtonTypes;
+
+//Structs.
 typedef struct ClockMode {
   int (*timer_update_fn)(char *time_string); // Time string created by OS, so we need to pass this as a function. 
-  int (*input_update_fn)(char input);
+  int (*input_update_fn)(InputButtonTypes input_type);
   int (*draw_fn)(); //Doesnt need bitmap location as this is a signleton.
   int (*init_fn)();
   void* page_data;
@@ -27,24 +47,6 @@ typedef struct ClockModeStateMachine {
 } ClockModeStateMachine;
 
 
-//Enums: This is where all the enums for page edit functions are stored.
-//
-//
-typedef enum EditTimeState {\
-  EDIT_HOURS,
-  EDIT_MINS,
-  EDIT_SECS,
-  EDIT_INACTIVE
-} EditTimeState;
-
-typedef enum InputButtonStates {
-  MODE_BUTTON,
-  EDIT_BUTTONM,
-  SNOOZE_BUTTON,
-  UP_BUTTON,
-  DOWN_BUTTON,
-} InputButtonStates;
-
 //Functions:
 int init_page_state_machine();
 // initialised page_state_machine
@@ -55,5 +57,6 @@ ClockMode *get_next_page();
 int add_page(ClockMode *page_loc);
 //Allows a new page to be added to the ClockModeStateMachine, and returns the index.
 
+EditTimeState get_next_time_edit_state(EditTimeState current_state);
 #endif
 
