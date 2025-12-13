@@ -26,6 +26,26 @@ typedef struct ClockModeStateMachine {
   ClockMode *active_page;
 } ClockModeStateMachine;
 
+
+//Enums: This is where all the enums for page edit functions are stored.
+//
+//
+typedef enum EditTimeState {\
+  EDIT_HOURS,
+  EDIT_MINS,
+  EDIT_SECS,
+  EDIT_INACTIVE
+} EditTimeState;
+
+typedef enum InputButtonStates {
+  MODE_BUTTON,
+  EDIT_BUTTONM,
+  SNOOZE_BUTTON,
+  UP_BUTTON,
+  DOWN_BUTTON,
+} InputButtonStates;
+
+//Functions:
 int init_page_state_machine();
 // initialised page_state_machine
 

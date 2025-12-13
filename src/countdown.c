@@ -1,30 +1,23 @@
-#include "countdown.h"
 #include "time.h"
+#include "page.h"
 
 /* THIS IS A COUNTDOWN!*/
 
 // Define timer states,
 typedef enum CountdownState {
-  COUNTDOWN_INACTIVE,
-  COUNTDOWN_ACTIVE,
-  COUNTDOWN_PAUSED,
-  COUNTDOWN_EDIT,
-  COUNTDOWN_DONE,
+  COUNTDOWN_INACTIVE,          //Can go to COUNTDOWN_ACTIVE & COUNTDOWN_EDIT
+  COUNTDOWN_ACTIVE,            //Can go to COUNTDOWN_PAUSED & COUNTDOWN_DONE
+  COUNTDOWN_PAUSED,            //Can go to COUNTDOWN_INACTIVE & COUNTDOWN_ACTIVE
+  COUNTDOWN_EDIT,              //Can go to COUNTDOWN_INACTIVE
+  COUNTDOWN_DONE,              //Can go to COUNTDOWN_INACTIVe
 } CountdownState;
-
-typedef enum CountdownEditState {
-  EDIT_HOURS,
-  EDIT_MINS,
-  EDIT_SECS,
-  EDIT_INACTIVE,
-} CountdownEditState;
-
+#include "countdown.h"
 // Static variables.
 static time_t countdown_end_time = 0;
 static time_t countdown_time = 0;
 static char remaining_time_string[16];
 static CountdownState countdown_state = COUNTDOWN_INACTIVE;
-static CountdownEditState countdown_edit_state = EDIT_INACTIVE;
+static EditTimeState countdown_edit_state = EDIT_INACTIVE;
 static int timer_length;
 
 //initialising enums.
@@ -38,7 +31,7 @@ int countdown_timer_update(char *time_string) {
 
   switch(countdown_state) {
     case COUNTDOWN_INACTIVE: {
-      time_remaining = 0;
+      //do nothing.
       break;
     }
 
@@ -52,16 +45,20 @@ int countdown_timer_update(char *time_string) {
         countdown_state = COUNTDOWN_DONE;
         time_remaining = 0;
       }
+      return 0;
       break;
     }
 
     case COUNTDOWN_PAUSED: {
       // Do nothing.
+      // This is the same as COUNTDOWN_INACTIVE but its a different state so 
+      // modelled differently in case anything is changed in the future.
       return 0;
       break;
     }
 
     case COUNTDOWN_EDIT: {
+      //Again, does nothing.
       return 0;
       break;
     }
@@ -73,8 +70,12 @@ int countdown_timer_update(char *time_string) {
       return 0;
       break;
     }
+    default:
+      //this should never happen. The state machine has entered an invalid state.
+      return 1;
+      break;
   }
-  get_countdown_string(time_remaining, remaining_time_string);
+  get_countdown_string(countdown_time, remaining_time_string);
   return 0; 
 }
 
@@ -120,7 +121,7 @@ char *get_countdown_string(time_t time_remaining, char *time_string_loc) {
     int minutes = (time_remaining % 3600) / 60;
     int seconds = time_remaining % 60;
     
-    snprintf(time_string_loc, 9, "%02d:%02d:%02d", hours, minutes, seconds);
+    snprintf(time_string_loc, 9, "%02d:%02d:%02d\n", hours, minutes, seconds);
     return time_string_loc; 
 }
 
@@ -132,8 +133,8 @@ int reset_countdown(time_t raw_time) {
 }
 
 int init_countdown() {
-  countdown_end_time = 0;
-  get_countdown_string(countdown_end_time, remaining_time_string);
+  countdown_time = 15 * 60;
+  get_countdown_string(countdown_time, remaining_time_string);
   countdown_state = COUNTDOWN_INACTIVE;
   countdown_edit_state = EDIT_INACTIVE;
 
