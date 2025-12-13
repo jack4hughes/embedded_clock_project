@@ -1,6 +1,4 @@
-#include "time.h"
-#include "page.h"
-
+#include "countdown.h"
 /* THIS IS A COUNTDOWN!*/
 
 // Define timer states,
@@ -9,9 +7,10 @@ typedef enum CountdownState {
   COUNTDOWN_ACTIVE,            //Can go to COUNTDOWN_PAUSED & COUNTDOWN_DONE
   COUNTDOWN_PAUSED,            //Can go to COUNTDOWN_INACTIVE & COUNTDOWN_ACTIVE
   COUNTDOWN_EDIT,              //Can go to COUNTDOWN_INACTIVE
-  COUNTDOWN_DONE,              //Can go to COUNTDOWN_INACTIVe
+  COUNTDOWN_DONE,              //Can go to COUNTDOWN_INACTIVE
 } CountdownState;
-#include "countdown.h"
+
+
 // Static variables.
 static time_t countdown_end_time = 0;
 static time_t countdown_time = 0;
@@ -21,7 +20,6 @@ static EditTimeState countdown_edit_state = EDIT_INACTIVE;
 static int timer_length;
 
 //initialising enums.
-
 int countdown_timer_update(char *time_string) {
   /* Handles the timer logic asssociated with an update input. Shouldn't 
    * handle drawing directly, instead it should upodate the time remaining string.
@@ -97,12 +95,93 @@ int add_time_to_countdown(void) {
       return 0;
   }
 }
-int countdown_input_update(char input) {
-  switch(input) {
-    case 0:
-      return 0;
+
+int remove_time_from_countdown(void) {
+  int countdown_time_buffer = countdown_time;
+  switch(countdown_edit_state) {
+    case EDIT_INACTIVE:
+      return 1; //shouldnt be reached!
+    case EDIT_HOURS:
+      countdown_time_buffer -= 3600;
+    case EDIT_MINS:
+      countdown_time_buffer -= 60;
+    case EDIT_SECS:
+      countdown_time_buffer -= 1;
   }
-  return 0;
+  
+  //make sure that negative times cant be reached.
+  if (countdown_time_buffer >= 0) {
+    countdown_time = countdown_time_buffer;
+  }
+  else {
+    countdown_time = 0;
+  }
+  return countdown_time;
+}
+
+CountdownState countdown_edit_button_state_change(CountdownState current_state) {
+  //This function handles changes in the countdown state because of user inputs.
+  switch (current_state) {
+    case COUNTDOWN_INACTIVE:
+      countdown_edit_state = EDIT_HOURS;
+      return COUNTDOWN_EDIT;
+    
+    case COUNTDOWN_PAUSED:
+      return 0; 
+
+    case COUNTDOWN_EDIT:    
+      if (countdown_edit_state == EDIT_SECS) {
+        return COUNTDOWN_INACTIVE;
+      }
+      else {
+        return COUNTDOWN_EDIT;
+      }
+    case COUNTDOWN_DONE:
+      countdown_edit_state = EDIT_HOURS;
+      return COUNTDOWN_EDIT; //Not entirely sure if this is a valid path.
+    default:
+      return COUNTDOWN_INACTIVE;
+  }
+}
+
+int countdown_input_update(InputButtonTypes input) {
+  switch(input) {
+    case MODE_BUTTON:
+      //should be handled above this module! Keeping explicit for now.
+      return 1;
+
+    case EDIT_BUTTON: {
+      countdown_state = countdown_edit_button_state_change(countdown_state);
+    }
+    case SNOOZE_BUTTON: {
+      //
+      if (countdown_state == COUNTDOWN_ACTIVE) {
+        countdown_state = COUNTDOWN_PAUSED;
+      }
+      if (countdown_state == COUNTDOWN_PAUSED) {
+        countdown_state = COUNTDOWN_ACTIVE;
+      }
+      return 0;
+    }
+
+    case UP_BUTTON: {
+      if (countdown_state == COUNTDOWN_EDIT) {
+        add_time_to_countdown();
+      }
+      return 0;
+    }
+
+    case DOWN_BUTTON: {
+      if (countdown_state == COUNTDOWN_EDIT) {
+        remove_time_from_countdown(); 
+      }
+      return 0;
+
+    default:
+      //called whenever this function encounters an unhandled path.
+      return 1;
+    }
+  }
 }
 
 int draw_countdown() {
