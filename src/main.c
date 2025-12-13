@@ -14,8 +14,6 @@
 
 #define MILLISECOND_MULTIPLIER 1000000
 
-
-
 char time_string[9] = {0}; //defines the main time string.
 
 int screen_update_loop(ClockMode *current_page) {
@@ -31,12 +29,12 @@ int input_handler(char input, ClockMode **page) {
   switch (input) {
     case ' ': {
       // need to move this function out to bitmap.c
-      int clear_overlay[SCREEN_WIDTH][SCREEN_HEIGHT]  = {0}; //gets the next page.
+      int clear_overlay[SCREEN_WIDTH][SCREEN_HEIGHT]  = {0}; //clears page buffer.
       Bitmap clear_overlay_bitmap = {
         SCREEN_WIDTH,
         SCREEN_HEIGHT,
         clear_overlay
-      };
+      }; //from bitmap.h
 
       overlay_bitmaps(&screen_bitmap, clear_overlay_bitmap, 0, 0);
       *page = get_next_page(); //Changes page reference pointer in main logic flow.
@@ -45,6 +43,7 @@ int input_handler(char input, ClockMode **page) {
     break;
     case 'q':
       **page;
+      exit(0);
       break;//quit
     
     case 'a':
