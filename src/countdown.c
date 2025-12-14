@@ -43,7 +43,6 @@ int countdown_timer_update(char *time_string) {
         countdown_state = COUNTDOWN_DONE;
         time_remaining = 0;
       }
-      return 0;
       break;
     }
 
@@ -51,13 +50,11 @@ int countdown_timer_update(char *time_string) {
       // Do nothing.
       // This is the same as COUNTDOWN_INACTIVE but its a different state so 
       // modelled differently in case anything is changed in the future.
-      return 0;
       break;
     }
 
     case COUNTDOWN_EDIT: {
       //Again, does nothing.
-      return 0;
       break;
     }
 
@@ -65,15 +62,14 @@ int countdown_timer_update(char *time_string) {
       // wait for user input cancelling timer.
       // Display 00:00.
       // Make a noise.
-      return 0;
       break;
     }
     default:
       //this should never happen. The state machine has entered an invalid state.
       return 1;
-      break;
   }
   get_countdown_string(countdown_time, remaining_time_string);
+  printf("current mode: %d\n", countdown_state);
   return 0; 
 }
 
@@ -86,12 +82,15 @@ int add_time_to_countdown(void) {
       return 1;                //should never be called in this state. Returns error value.
     case EDIT_HOURS:
       countdown_time += 3600;
+      printf("time: %d", countdown_time);
       return 0;
     case EDIT_MINS:
       countdown_time += 60;
+      printf("time: %d", countdown_time);
       return 0;
     case EDIT_SECS:
       countdown_time += 1;
+      printf("time: %d", countdown_time);
       return 0;
   }
 }
