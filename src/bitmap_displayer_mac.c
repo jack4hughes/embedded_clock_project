@@ -1,4 +1,5 @@
 #include "bitmap_displayer_mac.h"
+#include "debug_buffer.h"
 
 static struct termios standard_termios;
 static int terminal_modified = 0;
@@ -87,7 +88,6 @@ int print_bitmap(uint16_t *bitmap_loc) {
   // Prints the current bitmap out to the screen.
   int i = 0;
   int col_number = 0;
-  hide_cursor();
   cursor_home(); //should send the cursor home?
   
   while (i < SCREEN_HEIGHT * SCREEN_WIDTH) {
@@ -101,6 +101,7 @@ int print_bitmap(uint16_t *bitmap_loc) {
         printf("\n");
     }; 
   }
+  print_buffer();
   return 0;  // confirms that operation has been completed.
 }
 

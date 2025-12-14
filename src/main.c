@@ -38,9 +38,8 @@ int input_handler(char input, ClockMode **page) {
 
       overlay_bitmaps(&screen_bitmap, clear_overlay_bitmap, 0, 0);
       *page = get_next_page(); //Changes page reference pointer in main logic flow.
-      printf("Selected next page!: page loc: %p\n", (void *) page);
-    }
-    break;
+      break;
+      }
     case 'q':
       **page;
       exit(0);
@@ -48,21 +47,21 @@ int input_handler(char input, ClockMode **page) {
    
     case 'w':
       (*page)->input_update_fn(UP_BUTTON);
-      printf("pressed up button!\n");
+      write_input(UP_BUTTON);
       return 0;
     case 'a':
       (*page)->input_update_fn(EDIT_BUTTON);
-      printf("pressed edit button!\n");
+      write_input(EDIT_BUTTON);
       return 0; //This will be our first button.
 
     case 's':
       (*page)->input_update_fn(DOWN_BUTTON);
-      printf("pressed down button!\n");
+      write_input(DOWN_BUTTON);
       return 0;
 
     case 'd':
       (*page)->input_update_fn(MODE_BUTTON);
-      printf("pressed mode button!\n");
+      write_input(MODE_BUTTON);
       return 0;
        
     default:
@@ -85,26 +84,26 @@ int main(void) {
 
   ClockMode *page = get_next_page();
 
-  printf("PAGE LOC: %p", (void *) page);
-
   //set up IO
   init_term_io();
-  
+  hide_cursor(); 
+
   // Setting up the time for each loop.
   struct timespec ts, rem;
   ts.tv_sec = 0;
-  ts.tv_nsec = 17 * MILLISECOND_MULTIPLIER; //60fps!
+  ts.tv_nsec = 50 * MILLISECOND_MULTIPLIER; //60fps!
   
-  while(1) {
+ while(1) {
     char input;
-    int user_input_received = read(STDIN_FILENO, &input, 1); //this is currently blocking for 0.1 seconds each time. Need to find a way to improve this?
+    int user_input_received = read(STDIN_FILENO, &input, 1);
+  
     if (user_input_received == 1) {
       input_handler(input, &page);
     }
-      //display screen!
-    if (user_input_received == 0) {
-      int screen_update_status = screen_update_loop(page);
-      print_buffer();
-      } 
-    }
-  }
+  
+    // Always update screen, regardless of input
+    screen_update_loop(page);
+    
+    // ADD THIS - actually sleep to control framerate
+  }  
+}

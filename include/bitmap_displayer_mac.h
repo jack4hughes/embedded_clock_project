@@ -29,6 +29,7 @@ void signal_handler(int signum);
 
 int init_term_io();
 //initialises screen display.
+
 char *map_pixel_value_to_char(uint16_t bitmap_entry);
 /* Provides a mapping that matches pixel values to characters.
  *
@@ -38,6 +39,8 @@ char *map_pixel_value_to_char(uint16_t bitmap_entry);
 void clear_screen(); //Clears the terminal output (SLOW)
 
 void cursor_home(); //return the cursor to the home position.
+
+void hide_cursor();
 
 int print_bitmap(uint16_t *bitmap_loc);
 /* Prints the bitmap out to the terminal. At the moment, this has no flushing
