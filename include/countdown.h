@@ -9,7 +9,9 @@
 #include "time_getter_mac.h"
 #include "page.h"
 #include "bitmap.h"
+#include "debug_buffer.h"
 
+//external function prototypes.
 int countdown_timer_update(char *time_string);
 
 int draw_timer();

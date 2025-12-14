@@ -104,6 +104,7 @@ int main(void) {
       //display screen!
     if (user_input_received == 0) {
       int screen_update_status = screen_update_loop(page);
+      print_buffer();
       } 
     }
   }

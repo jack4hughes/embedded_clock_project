@@ -1,4 +1,5 @@
 #include "page.h"
+#include "debug_buffer.h"
 
 static ClockModeStateMachine active_page_selector = {0};
 
@@ -20,12 +21,12 @@ ClockMode *get_next_page() {
     active_page_selector.active_index < active_page_selector.number_of_pages
   ) {
     int index = active_page_selector.active_index; //just for readability
-    printf("Current page index: %d", index);
+    write_current_page(active_page_selector.active_page);
+
     active_page_selector.active_page = active_page_selector.pages[index];
     
     ClockMode *page_loc = active_page_selector.pages[index];
     active_page_selector.active_page = page_loc;
-    printf("returning next page!, page loc in page array: %p\n", (void *) page_loc);
     if (page_loc != 0) {
       return page_loc;
     }
@@ -35,7 +36,6 @@ ClockMode *get_next_page() {
       active_page_selector.active_index = 0;
       active_page_selector.active_page = active_page_selector.pages[0]; 
       ClockMode *page_loc = get_active_page_loc(); //hello?
-      printf("returning first page!, page loc: %p\n", (void *) page_loc);
       return page_loc;
     }
   }
@@ -45,7 +45,8 @@ ClockMode *get_next_page() {
     active_page_selector.active_index = 0;
     active_page_selector.active_page = active_page_selector.pages[0];
     ClockMode *page_loc = get_active_page_loc();
-    printf("returning first page!, page loc: %p\n", (void *) page_loc);
+    write_current_page(active_page_selector.active_page); //writes current page out.
+    //
     return page_loc;
   }
 }
@@ -56,12 +57,6 @@ int init_page_state_machine() {
 }
 
 int add_page(ClockMode *page_loc) {
-  printf(
-    "current active pages: %x, page to add: %p\n", 
-    active_page_selector.number_of_pages,  
-    (void *) page_loc
-  );
-
   ClockMode *page_array_loc = &active_page_selector.pages;
   ClockMode *new_page_loc = page_array_loc + active_page_selector.number_of_pages; //gets the postiion of the last page.
   

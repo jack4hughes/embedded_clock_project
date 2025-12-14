@@ -18,6 +18,7 @@ static char remaining_time_string[16];
 static CountdownState countdown_state = COUNTDOWN_INACTIVE;
 static EditTimeState countdown_edit_state = EDIT_INACTIVE;
 static int timer_length;
+static int countdown_debug_buffer[256];
 
 //initialising enums.
 int countdown_timer_update(char *time_string) {
@@ -69,7 +70,8 @@ int countdown_timer_update(char *time_string) {
       return 1;
   }
   get_countdown_string(countdown_time, remaining_time_string);
-  printf("current mode: %d\n", countdown_state);
+
+  write_current_mode(countdown_state); 
   return 0; 
 }
 
@@ -82,15 +84,15 @@ int add_time_to_countdown(void) {
       return 1;                //should never be called in this state. Returns error value.
     case EDIT_HOURS:
       countdown_time += 3600;
-      printf("time: %d", countdown_time);
+      write_edit_mode(countdown_edit_state);
       return 0;
     case EDIT_MINS:
       countdown_time += 60;
-      printf("time: %d", countdown_time);
+      write_edit_mode(countdown_edit_state);
       return 0;
     case EDIT_SECS:
       countdown_time += 1;
-      printf("time: %d", countdown_time);
+      write_edit_mode(countdown_edit_state);
       return 0;
   }
 }
@@ -100,12 +102,19 @@ int remove_time_from_countdown(void) {
   switch(countdown_edit_state) {
     case EDIT_INACTIVE:
       return 1; //shouldnt be reached!
+      write_edit_mode(countdown_edit_state); 
     case EDIT_HOURS:
       countdown_time_buffer -= 3600;
+      write_edit_mode(countdown_edit_state);
+      return 0;
+    
     case EDIT_MINS:
       countdown_time_buffer -= 60;
+      write_edit_mode(countdown_edit_state);
+
     case EDIT_SECS:
       countdown_time_buffer -= 1;
+      write_edit_mode(countdown_edit_state);
   }
   
   //make sure that negative times cant be reached.
@@ -119,31 +128,42 @@ int remove_time_from_countdown(void) {
 }
 
 CountdownState countdown_edit_button_state_change(CountdownState current_state) {
+  CountdownState next_countdown_state;
   //This function handles changes in the countdown state because of user inputs.
   switch (current_state) {
     case COUNTDOWN_INACTIVE:
-      countdown_edit_state = EDIT_HOURS;
-      return COUNTDOWN_EDIT;
+      next_countdown_state = EDIT_HOURS;
+      break;
     
     case COUNTDOWN_PAUSED:
-      return 0; 
+      next_countdown_state = COUNTDOWN_PAUSED;
+      break;
 
     case COUNTDOWN_EDIT:    
       if (countdown_edit_state == EDIT_SECS) {
-        return COUNTDOWN_INACTIVE;
+        next_countdown_state = COUNTDOWN_INACTIVE;
       }
       else {
-        return COUNTDOWN_EDIT;
+        next_countdown_state = COUNTDOWN_EDIT;
+        countdown_edit_state = countdown_edit_button_state_change(countdown_state);
       }
+      break;
+
     case COUNTDOWN_DONE:
       countdown_edit_state = EDIT_HOURS;
-      return COUNTDOWN_EDIT; //Not entirely sure if this is a valid path.
+      next_countdown_state = COUNTDOWN_EDIT; //Not entirely sure if this is a valid path.
+      break;
+
     default:
-      return COUNTDOWN_INACTIVE;
+      next_countdown_state = COUNTDOWN_INACTIVE;
+      break;
+
+    return next_countdown_state;
   }
 }
 
 int countdown_input_update(InputButtonTypes input) {
+  int next_countdown_state;
   switch(input) {
     case MODE_BUTTON:
       //should be handled above this module! Keeping explicit for now.
@@ -151,6 +171,7 @@ int countdown_input_update(InputButtonTypes input) {
 
     case EDIT_BUTTON: {
       countdown_state = countdown_edit_button_state_change(countdown_state);
+      break; 
     }
     case SNOOZE_BUTTON: {
       //
@@ -160,28 +181,31 @@ int countdown_input_update(InputButtonTypes input) {
       if (countdown_state == COUNTDOWN_PAUSED) {
         countdown_state = COUNTDOWN_ACTIVE;
       }
-      return 0;
+      break;
     }
 
     case UP_BUTTON: {
       if (countdown_state == COUNTDOWN_EDIT) {
         add_time_to_countdown();
       }
-      return 0;
+      break;
     }
 
     case DOWN_BUTTON: {
       if (countdown_state == COUNTDOWN_EDIT) {
         remove_time_from_countdown(); 
       }
-      return 0;
-
+      break;
+    }
+    
     default:
       //called whenever this function encounters an unhandled path.
       return 1;
+    
+
+    write_current_mode(countdown_state);
     }
   }
-}
 
 int draw_countdown() {
   update_bitmap_with_string(&screen_bitmap, remaining_time_string, 0, 0);
@@ -198,8 +222,7 @@ char *get_countdown_string(time_t time_remaining, char *time_string_loc) {
     int hours = time_remaining / 3600;
     int minutes = (time_remaining % 3600) / 60;
     int seconds = time_remaining % 60;
-    
-    snprintf(time_string_loc, 9, "%02d:%02d:%02d\n", hours, minutes, seconds);
+
     return time_string_loc; 
 }
 
