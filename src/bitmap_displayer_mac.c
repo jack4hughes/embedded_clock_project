@@ -101,7 +101,6 @@ int print_bitmap(uint16_t *bitmap_loc) {
         printf("\n");
     }; 
   }
-  print_buffer();
   return 0;  // confirms that operation has been completed.
 }
 

@@ -21,6 +21,7 @@ int screen_update_loop(ClockMode *current_page) {
   int timer_update_status = current_page->timer_update_fn(time_string); //should return a 1 if error occurs.
   int draw_status = current_page->draw_fn(); //should return a 2 if error occurs.
   print_bitmap(screen_bitmap.bitmap_loc);
+  print_buffer(); //this should be working!
   return 0;
 }
 
