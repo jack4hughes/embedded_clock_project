@@ -10,8 +10,8 @@
 #define CHARACTER_HEIGHT 5
 #define CHARACTER_WIDTH 5
 
-#define SCREEN_HEIGHT 32
-#define SCREEN_WIDTH 64
+#define SCREEN_HEIGHT 15
+#define SCREEN_WIDTH 81
 
 // this defines the width and height of the characters that will appear on the
 // screen
@@ -22,7 +22,7 @@
 typedef struct Bitmap {
   uint16_t width;
   uint16_t height;
-  uint16_t *bitmap_loc; //This means we have no consts any more! can fix this with unions I think.
+  const uint16_t *bitmap_loc; //This means we have no consts any more! can fix this with unions I think.
 } Bitmap;
 
 // These are the locations for our font bitmaps! They need to be stored just like this.

@@ -10,7 +10,7 @@ int draw_clock() {
   update_bitmap_with_string(&screen_bitmap, time_string_loc, 0, 0);
 }
 
-int adjust_clock(char input) {
+int adjust_clock(InputButtonTypes input) {
   return 0; //do nothing for now.
 }
 

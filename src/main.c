@@ -43,6 +43,8 @@ int input_handler(char input, ClockMode **page) {
       }
     case 'q':
       **page;
+      clear_screen();
+      fflush(0);
       exit(0);
       break;//quit
    
@@ -50,6 +52,7 @@ int input_handler(char input, ClockMode **page) {
       (*page)->input_update_fn(UP_BUTTON);
       write_input(UP_BUTTON);
       return 0;
+
     case 'a':
       (*page)->input_update_fn(EDIT_BUTTON);
       write_input(EDIT_BUTTON);
@@ -93,18 +96,19 @@ int main(void) {
   struct timespec ts, rem;
   ts.tv_sec = 0;
   ts.tv_nsec = 50 * MILLISECOND_MULTIPLIER; //60fps!
-  
- while(1) {
-    char input;
-    int user_input_received = read(STDIN_FILENO, &input, 1);
-  
-    if (user_input_received == 1) {
-      input_handler(input, &page);
-    }
-  
-    // Always update screen, regardless of input
-    screen_update_loop(page);
-    
-    // ADD THIS - actually sleep to control framerate
+
+int i = 0;
+while(i != 1) {
+  char input;
+  int user_input_received = read(STDIN_FILENO, &input, 1);
+
+  if (user_input_received == 1) {
+    input_handler(input, &page);
+  }
+
+  // Always update screen, regardless of input
+  screen_update_loop(page);
+  //i++; //stops the function after 1 iteration when active! 
+  // ADD THIS - actually sleep to control framerate
   }  
 }

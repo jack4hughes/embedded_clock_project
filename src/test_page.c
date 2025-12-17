@@ -5,7 +5,7 @@ int test_timer_update(char *time_string){
  return 0; 
 }
 
-int test_input_update(char input) {
+int test_input_update(InputButtonTypes input) {
   // This module doesnt have interactions! 
   return 0;
 }

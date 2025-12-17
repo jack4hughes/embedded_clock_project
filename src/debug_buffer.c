@@ -68,11 +68,11 @@ void write_edit_mode(EditTimeState edit_mode) {
 void write_input(InputButtonTypes input) {
   char *buffer = input_ring_buffer[input_ring_buffer_entry_index]; //gets the right buffer_line_1
   switch(input) {
-    case MODE_BUTTON: /* write_line(buffer, "mode");*/ break;
-    case EDIT_BUTTON: /*write_line(buffer, "edit");*/ break;
-    case SNOOZE_BUTTON: /*write_line(buffer, "snooze");*/ break; 
-    case UP_BUTTON: /*write_line(buffer, "up");*/ break;
-    case DOWN_BUTTON: /*write_line(buffer, "down");*/ break;
+    case MODE_BUTTON: write_line(buffer, "mode\0"); break;
+    case EDIT_BUTTON: write_line(buffer, "edit\0"); break;
+    case SNOOZE_BUTTON: write_line(buffer, "snooze\0"); break; 
+    case UP_BUTTON: write_line(buffer, "up\0"); break;
+    case DOWN_BUTTON: write_line(buffer, "down\0"); break;
   }
   //clean wrapping for ring buffer.
   input_ring_buffer_entry_index = (input_ring_buffer_entry_index + 1) % 16;

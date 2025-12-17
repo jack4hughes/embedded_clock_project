@@ -278,6 +278,6 @@ void reset_screen_bitmap() {
 }
 
 void init_screen_bitmap() {
-  screen_bitmap = create_bitmap(SCREEN_HEIGHT, SCREEN_WIDTH, (const uint16_t*)screen_bitmap_array);
+  screen_bitmap = create_bitmap(SCREEN_WIDTH, SCREEN_HEIGHT, (const uint16_t*)screen_bitmap_array);
   reset_screen_bitmap();
 }
