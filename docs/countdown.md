@@ -30,3 +30,24 @@ EDIT_HOURS
 ```
 We can decide whether this edit state machine can be exited early (IE if EDIT_INACTIVE is connected to each other choice)
 or if a user has to go through all states to arrive at EDIT_INACTIVE again and exit the edit mode.
+
+The current progression when countdown is accessed for the first time is this:
+
+At the moment, countdown inactive seems to be going to countdown paused when edit is pressed.
+COUNTDOWN_INACTIVE
+COUNTDOWN_PAUSED
+COUNTDOWN_DONE
+COUNTDOWN_INACTIVE
+COUNTDOWN_INACTIVE
+
+instead this should happen:
+
+COUNTDOWN_INACTIVE
+COUNTDOWN_EDIT
+_add time here_
+COUNTDOWN_INACTIVE (but with a non-zero time now)
+then we need to press a different button
+COUNTDOWN_ACTIVE (until timer reaches 00:00)
+COUNTDOWN_DONE.
+
+This is wrong! 
