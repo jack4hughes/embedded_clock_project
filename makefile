@@ -7,7 +7,7 @@ BUILD_DIR = build
 CC = gcc
 
 # Add Compiler Flags:
-CFLAGS = -Wall -Wextra -std=c99 -I$(INCLUDE_DIR)
+CFLAGS = -Wall -Wextra -std=c99 -I$(INCLUDE_DIR) -g -O0
 
 # Tell the code where to write the executable.
 TARGET = $(BUILD_DIR)/display_test
