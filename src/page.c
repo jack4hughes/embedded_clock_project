@@ -21,7 +21,7 @@ ClockMode *get_next_page() {
     active_page_selector.active_index < active_page_selector.number_of_pages
   ) {
     int index = active_page_selector.active_index; //just for readability
-    write_current_page(active_page_selector.active_page);
+    display_current_page(active_page_selector.active_page);
 
     active_page_selector.active_page = active_page_selector.pages[index];
     
@@ -45,7 +45,7 @@ ClockMode *get_next_page() {
     active_page_selector.active_index = 0;
     active_page_selector.active_page = active_page_selector.pages[0];
     ClockMode *page_loc = get_active_page_loc();
-    write_current_page(active_page_selector.active_page); //writes current page out.
+    display_current_page(active_page_selector.active_page); //writes current page out.
     //
     return page_loc;
   }

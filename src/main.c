@@ -50,22 +50,22 @@ int input_handler(char input, ClockMode **page) {
    
     case 'w':
       (*page)->input_update_fn(UP_BUTTON);
-      write_input(UP_BUTTON);
+      display_input(UP_BUTTON);
       return 0;
 
     case 'a':
       (*page)->input_update_fn(EDIT_BUTTON);
-      write_input(EDIT_BUTTON);
+      display_input(EDIT_BUTTON);
       return 0; //This will be our first button.
 
     case 's':
       (*page)->input_update_fn(DOWN_BUTTON);
-      write_input(DOWN_BUTTON);
+      display_input(DOWN_BUTTON);
       return 0;
 
     case 'd':
       (*page)->input_update_fn(MODE_BUTTON);
-      write_input(MODE_BUTTON);
+      display_input(MODE_BUTTON);
       return 0;
        
     default:
